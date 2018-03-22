@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .module{
+            float:left;
+            width:100px;
+            height:100px;
+            margin:0 auto;
+        }
+
+        #div1{
+            background:rgb(224, 224, 175);
+        }
+        
+        #div2{
+            background: rgb(117, 117, 226);
+        }
+        #div3{
+            background: rgb(219, 130, 145);
+        }
+    </style>
+</head>
+
+<body>
+      <button id="button1">按钮1</button>
+      <button id="button2">按钮2</button>
+      <button id="button3">按钮3</button>
+      <button id="button4">按钮4</button>
+
+</body>
+<script>
+  
+    var btn1 = document.getElementById('button1') ;
+    var btn2 = document.getElementById('button2') ;
+
+
+    
+
+    function Player(name,teamColor){
+        this.state = 'live'; //玩家状态
+        this.name = name ; // 角色名字
+        this.teamColor = teamColor ; //队伍颜色
+    }
+
+    Player.prototype.win = function(){
+        console.log(this.name + '胜利了');
+    }
+
+    Player.prototype.lose = function(){
+        console.log( this.teamColor +"队输了");
+    }
+
+    Player.prototype.die = function(){
+        var all_dead = true;
+        this.state = 'dead' ;
+        console.log( this.name + "  died ！")
+        playDirector.reciveMessage('playerDead',this); //给中介者发消息，玩家死亡
+    }
+
+    Player.prototype.remove = function(){
+        playDirector.reciveMessage('removePlayer',this);
+    }
+
+    
+    Player.prototype.changeTeam = function(color){
+        playDirector.reciveMessage('changeTeam',this,color);
+    }
+
+   // 这个函数不再需要给创建的玩家对象设置队友和敌人，
+   // 这个工厂函数几乎失去了工厂的意义
+    var playerFactory = function( name,teamColor){
+        var newPlayer = new Player( name,teamColor );
+        playDirector.reciveMessage('addPlayer',newPlayer );
+    }
+
+    
+    var playerDirector = (function(){
+             var players ={};
+             operations ={} ;//中介者可以执行的操作
+
+             //新增一个玩家
+             operations.addPlayer = function( player ){
+                 var teamColor = player.teamColor ;
+                 players[ teamColor ] = players[ teamColor ] || []
+
+             }
+    })()
+
+
+
+
+
+    // var red_p1 = playFactory('皮皮','red');
+    // var red_p2 = playFactory('蛋蛋','red');
+
+    // var blue_p1 = playFactory('小小','blue');
+    // var blue_p2 = playFactory('大大','blue');
+
+    // red_p1.die()
+    // red_p2.die()
+
+
+    
+</script>
+
+</html>
